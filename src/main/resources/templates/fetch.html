@@ -4,21 +4,24 @@
 <meta charset="UTF-8">
 <title>Movie List | Movie Project</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
   body {
-    background: radial-gradient(circle at top left, #0f0f1f, #1a1a40, #000);
+    background: radial-gradient(circle at top left, #0d0d1a, #141438, #000);
     font-family: 'Poppins', sans-serif;
     color: #fff;
     min-height: 100vh;
     padding: 50px;
+    position: relative;
+    overflow-x: hidden;
   }
 
   h1 {
     text-align: center;
-    color: #fff;
-    margin-bottom: 40px;
+    color: #cddafd;
+    margin-bottom: 45px;
     text-shadow: 0 0 15px rgba(94, 96, 206, 0.6);
     font-weight: 600;
     letter-spacing: 1px;
@@ -33,65 +36,66 @@
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
+    transition: 0.3s;
   }
 
   th, td {
     padding: 15px 18px;
     text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     vertical-align: middle;
   }
 
   th {
     background: rgba(255, 255, 255, 0.1);
-    color: #cddafd;
+    color: #b5c9ff;
     font-weight: 600;
     letter-spacing: 0.5px;
     font-size: 1rem;
     text-transform: uppercase;
   }
 
-  td {
-    color: #e5e5e5;
-    font-size: 0.95rem;
+  tr {
+    transition: background 0.3s, transform 0.2s;
   }
 
   tr:hover {
-    background: rgba(94, 96, 206, 0.15);
-    transition: 0.3s;
+    background: rgba(94, 96, 206, 0.18);
+    transform: scale(1.005);
   }
 
-  /* Movie poster styling */
+  td {
+    color: #e6e6ff;
+    font-size: 0.95rem;
+  }
+
   img {
-    border-radius: 10px;
+    border-radius: 12px;
     box-shadow: 0 0 10px rgba(94, 96, 206, 0.5);
     transition: transform 0.3s ease;
   }
 
   img:hover {
-    transform: scale(1.05);
+    transform: scale(1.08);
   }
 
-  /* Larger trailer */
   iframe {
     border-radius: 10px;
-    width: 280px;
-    height: 160px;
+    width: 260px;
+    height: 150px;
     border: none;
     box-shadow: 0 0 12px rgba(94, 96, 206, 0.4);
   }
 
-  /* Compact description */
   .desc {
-    max-width: 300px;
+    max-width: 280px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  /* Play button */
   .play-btn {
-    background: #5e60ce;
+    background: linear-gradient(90deg, #5e60ce, #4361ee);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -104,21 +108,56 @@
   }
 
   .play-btn:hover {
-    background: #4a4fc1;
+    background: linear-gradient(90deg, #4a4fc1, #3641c4);
     box-shadow: 0 0 10px rgba(94, 96, 206, 0.4);
+  }
+
+  .action-links a {
+    color: #a0b4ff;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: 0.3s;
+  }
+
+  .action-links a:hover {
+    color: #fff;
+    background: rgba(94, 96, 206, 0.3);
   }
 
   footer {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 50px;
     color: #999;
     font-size: 0.9rem;
     opacity: 0.7;
+  }
+
+  /* Toast styling */
+  .toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1055;
+  }
+
+  .toast {
+    background-color: rgba(20, 20, 40, 0.9);
+    border: 1px solid rgba(100, 100, 255, 0.3);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(94, 96, 206, 0.5);
+    backdrop-filter: blur(6px);
+  }
+
+  .toast-body {
+    font-size: 0.95rem;
   }
 </style>
 </head>
 
 <body>
+
   <h1>🎥 Movie Database</h1>
 
   <table>
@@ -129,49 +168,68 @@
         <th>Poster</th>
         <th>Trailer</th>
         <th>Rating</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr th:each="m : ${movies}">
         <td th:text="${m.name}"></td>
-
-        <!-- Shortened description -->
         <td class="desc" th:text="${m.description}"></td>
+        <td><img th:src="${m.image}" alt="Movie Poster" height="100" width="100"></td>
 
-        <!-- Movie poster -->
-        <td>
-          <img th:src="${m.image}" alt="Movie Poster" height="100px" width="100px">
-        </td>
-
-        <!-- Trailer (starts muted, can play with sound) -->
         <td>
           <iframe 
             th:src="${#strings.replace(m.link, 'watch?v=', 'embed/')} + '?autoplay=1&mute=1&loop=1'"
             allow="autoplay; encrypted-media" allowfullscreen>
-          </iframe>
-          <br>
-          <button class="play-btn" onclick="unmuteTrailer(this)">🔊 Play with Sound</button>
+          </iframe><br>
+          <button class="play-btn" onclick="unmuteTrailer(this)">🔊 Play Sound</button>
         </td>
 
-        <!-- Rating -->
         <td>⭐ <span th:text="${m.rating}"></span>/5</td>
+
+        <td class="action-links">
+          <a th:href="'/update?id=' + ${m.id}">✏️ Edit</a>
+          <a th:href="'/delete?id=' + ${m.id}">🗑️ Delete</a>
+        </td>
       </tr>
     </tbody>
   </table>
 
-  <footer>
-    © 2025 Movie Project | Designed for film lovers 🎬
-  </footer>
+  <footer>© 2025 Movie Project | Designed for Film Lovers 🎬</footer>
 
+  <!-- Hidden message -->
+  <p id="alertMessage" th:text="${message}" hidden></p>
+
+  <!-- Toast container -->
+  <div class="toast-container">
+    <div id="liveToast" class="toast align-items-center text-bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toastMessage"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Enable sound when user clicks play
+    // Play trailer with sound
     function unmuteTrailer(button) {
-      const cell = button.parentElement;
-      const iframe = cell.querySelector('iframe');
+      const iframe = button.parentElement.querySelector('iframe');
       const src = iframe.src.replace('mute=1', 'mute=0');
       iframe.src = src;
-      button.remove(); // Remove the button after clicking
+      button.remove();
     }
+
+    // Show toast message if present
+    document.addEventListener("DOMContentLoaded", () => {
+      const message = document.getElementById("alertMessage")?.textContent;
+      if (message && message.trim() !== "") {
+        const toastMessage = document.getElementById("toastMessage");
+        toastMessage.textContent = message;
+        const toast = new bootstrap.Toast(document.getElementById("liveToast"));
+        toast.show();
+      }
+    });
   </script>
 
 </body>

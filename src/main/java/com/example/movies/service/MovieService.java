@@ -1,12 +1,10 @@
 package com.example.movies.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-
 import com.example.movies.model.Movies;
 import com.example.movies.repository.MovieRepository;
 
@@ -23,5 +21,12 @@ public class MovieService {
 	
 	public List<Movies> viewMovie() {
 		return movieRepository.findAll();
+	}
+	public void deleteMovie(int id) {
+		movieRepository.deleteById(id);
+	}
+	public Movies findById(int id) {
+		Optional<Movies> movie=movieRepository.findById(id);
+		return movie.get();
 	}
 }
